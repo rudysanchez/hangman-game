@@ -1,0 +1,60 @@
+import java.awt.*;
+import javax.swing.*;
+public class HangmanFrame extends JFrame {
+    
+    private JFrame frame;
+    private JPanel possibleLetters;
+    private JPanel hiddenWordPanel;
+    private DrawHangman manPanel;
+    HangmanGame model;    
+    private GuessPanelOne newGuessPanel;
+
+    public HangmanFrame(HangmanGame model) {
+    	this.model = model;
+        createFrame();
+    }
+    
+    public void createFrame() {
+        frame = new JFrame("Hangman");
+        frame.setSize(800, 600);
+        frame.setResizable(false);
+        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        newGuessPanel = new GuessPanelOne(this, model);
+        frame.add(newGuessPanel, BorderLayout.CENTER);
+        
+        createPossibleLettersPanel();
+        frame.add(possibleLetters, BorderLayout.NORTH);
+    
+        createManPanel();
+        frame.add(manPanel, BorderLayout.EAST);
+        
+        frame.setVisible(true);
+    }
+    
+    public void createPossibleLettersPanel() {
+        possibleLetters = new JPanel();
+        JLabel lettersList = new JLabel("\n");
+        possibleLetters.add(lettersList);
+    }
+    
+    public void createManPanel() {
+        manPanel = new DrawHangman(model);
+        this.add(manPanel);
+    }
+    
+    public void createHiddenWord() {
+        hiddenWordPanel = new JPanel();
+    }
+    
+    public JFrame getFrame() {
+    	return frame;
+    }
+    	
+    public void manPanelDraw() {
+    	manPanel.draw();
+    }
+    	
+    public void closeWindow() {
+    	frame.dispose();
+    }
+}
