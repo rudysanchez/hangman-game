@@ -1,0 +1,39 @@
+import java.util.ArrayList;
+import java.util.Random;
+
+public class Phrase {
+	private int randomPhrase;
+	private ArrayList<String> phrases;
+	private Random random;
+	private String phrase;
+	
+	// Constructor adds phrases to an array list
+	public Phrase() {
+		random = new Random();
+		
+		// add several phrases to the list 
+		this.phrases = new ArrayList<String>();
+		this.phrases.add("to infinity and beyond");
+		this.phrases.add("back to the drawing board");
+		this.phrases.add("drawing a blank");
+		this.phrases.add("elvis has left the building");
+		this.phrases.add("easy as pie");
+		this.phrases.add("fish out of water");
+		this.phrases.add("keep your eyes peeled");
+		this.phrases.add("needle in a haystack");
+		
+		getPhrase();
+	}
+	
+	// pick a phrase
+	public String getPhrase() {
+		
+		// create a random number from  to the size of the array
+		randomPhrase = random.nextInt(phrases.size()); 
+		
+		// get the phrase at the random number and store it in a string
+		this.phrase = phrases.get(randomPhrase);
+		return phrase;
+	}
+	
+}
