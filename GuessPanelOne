@@ -1,0 +1,183 @@
+import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.util.*;
+
+import javax.swing.*;
+
+public class GuessPanelOne extends JPanel {
+	private HangmanFrame bigFrame;
+	private HangmanGame model;
+	private DrawHangman man;
+	private JButton guessButton;
+ 	private JLabel possibleLettersText;
+ 	private JLabel endLabel;
+ 	private JLabel lettersAvailable;
+ 	private JTextField guessTextField;
+	private String phrase;
+	private JLabel replay;
+	private JButton yes, no;
+	private JLabel hiddenWord;
+	private JLabel hiddenWordHeader;
+	
+	public GuessPanelOne(HangmanFrame frame, HangmanGame model) {
+		
+		
+		this.bigFrame = frame;
+		this.model = model;
+		this.phrase = model.getPresentPhrase();
+		this.setLayout(null);
+		
+		
+		//creates button to press when the user wants to make a guess
+		guessButton = new JButton("Guess");
+		guessButton.setBounds(225, 75, 75, 25);
+		guessButton.addActionListener(new GuessButtonPress());
+		
+		//text field for the user to enter the guess
+		guessTextField = new JTextField();
+		guessTextField.setBounds(50, 75, 150, 25);
+		
+		
+		//creates label for the possible letters display
+		possibleLettersText = new JLabel (model.getCharUnguessed());
+		possibleLettersText.setBounds(50, 35, 500, 25);
+		
+		
+		//a label that is used to tell the user if the win or lose
+		endLabel = new JLabel("");
+		endLabel.setBounds(50, 100, 100, 50);
+		
+		//labels what letters are available
+		lettersAvailable = new JLabel("Available Letters: ");
+		lettersAvailable.setBounds(50, 0, 200, 25);
+		lettersAvailable.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		
+		
+		//asks the player if they would like to play again
+		replay = new JLabel("Would you like to play again?");
+		replay.setBounds(50, 125, 250, 50);
+		
+		
+		//buttons that allow for the player to answer if they want to play again or not
+		yes = new JButton("Yes");
+		no = new JButton("No");
+		yes.setBounds(50, 200, 65, 25);
+		no.setBounds(150, 200, 65, 25);
+		//listeners for the buttons
+		yes.addActionListener(new ReplayPress());
+		no.addActionListener(new ReplayPress());
+		
+		
+		//the hidden word that is revealed as guesses are made
+		hiddenWord = new JLabel(model.convertArraySpaces());
+		hiddenWord.setBounds(50, 400, 500, 50);
+		hiddenWord.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		
+		//the hidden word header
+		hiddenWordHeader = new JLabel("Hidden Word: ");
+		hiddenWordHeader.setBounds(50, 350, 200, 50);
+		hiddenWordHeader.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		
+		
+		
+		//adds items to the frame
+		this.add(guessButton);
+		this.add(possibleLettersText);
+		this.add(guessTextField);
+		this.add(hiddenWord);
+		this.add(lettersAvailable);
+		this.add(hiddenWordHeader);
+		
+		
+		//for testing purposes
+        System.out.println(model.getPresentPhrase());
+		
+	}
+	
+	
+	//----------------------------------------------------------------------------
+	
+	
+	class GuessButtonPress implements ActionListener{
+		public void actionPerformed(ActionEvent event)
+		{			
+			
+			System.out.println("this is awful");
+			String guess = guessTextField.getText();
+			guessTextField.setText("");
+			model.guess(guess);
+			bigFrame.manPanelDraw();
+			model.checkWinner();
+			model.checkLoser();
+			System.out.println(model.convertArray());
+			System.out.println(model.getIsLoser());
+			refresh();
+			
+			if (model.getIsWinner()) {
+				endLabel.setText("You win!");
+				hiddenWord.setText(model.getPresentPhrase());
+				addEndStuff();
+				endRefresh();
+			}
+			
+			if (model.getIsLoser()) {
+				endLabel.setText("You lose.");
+				hiddenWord.setText(model.getPresentPhrase());
+				addEndStuff();
+				endRefresh();
+			}
+		}
+
+	}
+	
+	
+	//------------------------------------------------------------------------------------
+	
+	class ReplayPress implements ActionListener {
+		public void actionPerformed(ActionEvent event) {
+			JButton sender = (JButton) event.getSource();
+			if (sender.getText() == "Yes") {
+				model.newGame();
+				refresh();
+				cleanWindow();
+			}
+			
+			if (sender.getText() == "No") {
+				bigFrame.closeWindow();
+			}
+		}
+	}
+	
+	//a method that handles the end functions
+	public void addEndStuff() {
+		this.add(endLabel);
+		this.add(replay);
+		this.add(yes);
+		this.add(no);
+	}
+	
+	//updates the board
+	public void refresh() {
+		hiddenWord.setText(model.convertArraySpaces());
+		possibleLettersText.setText(model.getCharUnguessed());
+		this.revalidate();
+		this.repaint();
+	}
+	
+	public void endRefresh()
+	{
+		
+		possibleLettersText.setText(model.getCharUnguessed());
+		this.revalidate();
+		this.repaint();
+	}
+	
+	public void cleanWindow() {
+		this.remove(yes);
+		this.remove(no);
+		this.remove(endLabel);
+		this.remove(replay);
+		bigFrame.manPanelDraw();
+	}
+}
