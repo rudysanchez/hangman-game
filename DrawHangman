@@ -1,0 +1,89 @@
+import java.awt.*;
+import java.awt.Dimension;
+import javax.swing.JPanel;
+
+public class DrawHangman extends JPanel{
+
+	
+	public static final int maxWrongGuesses = 6;
+	
+	private HangmanGame newHangman; 
+
+	
+	DrawHangman(HangmanGame model)
+	{
+		this.newHangman = model;
+		this.setPreferredSize(new Dimension(300,400));
+		this.setBackground(Color.WHITE);
+	}
+	
+	public void draw() {
+		repaint();
+	}
+	@Override
+	public void paintComponent(Graphics p ){
+		super.paintComponent(p);
+		Color color = Color.BLACK;
+		p.setColor(color);
+	
+	switch (newHangman.getNumWrongGuesses()){
+	
+	case 6: drawLeftLeg(p, color);
+	case 5: drawRightLeg(p, color);
+	case 4: drawLeftArm(p, color);
+	case 3: drawRightArm(p, color);
+	case 2: drawBody(p, color);
+	case 1: drawHead(p, color);
+	}
+	
+}
+	
+		private void drawHead(Graphics p, Color color){
+			p.setColor(color);
+			Graphics2D g2d = (Graphics2D) p;
+			g2d.setStroke(new BasicStroke(8));
+			g2d.drawOval(100, 100, 100, 100);
+			
+		}
+		
+		private void drawBody(Graphics p, Color color){
+			p.setColor(color);
+			Graphics2D g2d = (Graphics2D) p;
+			g2d.setStroke(new BasicStroke(8));
+			g2d.drawLine(150, 200, 150, 350);
+			
+		}
+	
+		private void drawRightArm(Graphics p, Color color){
+			p.setColor(color);
+			Graphics2D g2d = (Graphics2D) p; 
+			g2d.setStroke(new BasicStroke(8));
+			g2d.drawLine(147, 225, 110, 300);
+			
+		}
+		
+		private void drawLeftArm(Graphics p, Color color){
+			p.setColor(color);
+			Graphics2D g2d = (Graphics2D) p;
+			g2d.setStroke(new BasicStroke(8));
+			g2d.drawLine(152, 225, 184, 300);
+			
+		}
+		
+		private void drawRightLeg(Graphics p, Color color){
+			p.setColor(color);
+			Graphics2D g2d = (Graphics2D) p; 
+			g2d.setStroke(new BasicStroke(8));
+			g2d.drawLine(147, 352, 110, 420);
+			
+		}
+		
+		private void drawLeftLeg(Graphics p, Color color){
+			p.setColor(color);
+			Graphics2D g2d = (Graphics2D) p; 
+			g2d.setStroke(new BasicStroke(8));
+			g2d.drawLine(152, 352, 184, 420);
+			
+		}
+	
+}
