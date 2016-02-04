@@ -1,0 +1,234 @@
+import java.util.*;
+import java.awt.*;
+import javax.swing.*;
+
+
+public class HangmanGame{
+		
+		private int maxWrongGuesses;
+		private int numGuesses;
+		private int numWrongGuesses;
+		private ArrayList<Character> charsUnguessed;
+		private char [] revealedArray;
+		private Phrase phrase; 
+		private String presentPhrase;
+		Boolean isWinner;
+		Boolean isLoser;
+		
+		
+	
+		public HangmanGame(){
+			newGame();
+		}
+		
+		
+		//---------------------------------------------------------------------------------------------------------
+		
+		
+		public void newGame(){
+			this.isWinner = false;
+			this.isLoser = false;
+			this.phrase = new Phrase();
+			this.presentPhrase = phrase.getPhrase();
+			
+			this.revealedArray = new char[this.presentPhrase.length()];
+			for (int i = 0; i < revealedArray.length; i++)
+			{
+				if(this.presentPhrase.charAt(i) == ' ' || this.presentPhrase.charAt(i) == ',')
+					revealedArray[i] = this.presentPhrase.charAt(i);
+				else
+					revealedArray[i] = '_';
+			}
+			
+			this.numGuesses = 0;
+			this.numWrongGuesses = 0;
+			this.maxWrongGuesses = DrawHangman.maxWrongGuesses;
+			this.charsUnguessed = resetGuessedLetters();
+			
+		}
+		
+		
+		//----------------------------------------------------------------------------------------------------
+		
+		
+		//takes in a guess and checks it against the phrase to see if the guess is incorrect or correct
+		public void guess(String inString){
+			Boolean correctGuess = false;
+			
+			String str = inString.toLowerCase();
+			if(presentPhrase.equals(str))
+			{
+				setIsWinner(true);
+				return;
+			}	
+			if (str.length() == 1){
+				updateCharsUnguessed(str.charAt(0));
+				for(int i = 0; i < presentPhrase.length(); i++)
+				{
+					if(presentPhrase.charAt(i) == str.charAt(0))
+					{
+						revealedArray[i] = presentPhrase.charAt(i);
+						correctGuess = true;
+					}
+				}
+			}
+			if (correctGuess == false)
+					numWrongGuesses ++;
+		}
+		
+		//---------------------------------------------------------------------------------------------------
+		
+		//checks to see if the number of wrong guesses reaches or goes over the maximum allowed guesses 
+		public void checkLoser(){
+			if(numWrongGuesses >= maxWrongGuesses)
+				setIsLoser(true);
+		}
+		
+		//returns true or false value of loser
+		public boolean getIsLoser()
+		{
+			return isLoser;
+		}
+		
+		//setter for value of loser
+		public void setIsLoser(Boolean isLoser )
+		{
+			this.isLoser = isLoser;
+		}
+		
+		
+		//checks the revealedArray to see if there are any unguessed letters left
+		//and returns false if there is and true if the phrase has been guessed
+		public void checkWinner(){
+			
+			if(convertArray().equals(presentPhrase))
+				setIsWinner(true);
+
+		}
+		
+		//returns the true or false value of winner
+		public Boolean getIsWinner() {
+			return isWinner;
+		}
+
+		
+		
+		//sets the winner to true or false
+		public void setIsWinner(Boolean isWinner) {
+			this.isWinner = isWinner;
+		}
+		
+		
+		//---------------------------------------------------------------------------------------------------
+		
+		//creates an ArrayList of all the letters in the alphabet, it will update as letters are guessed
+		public ArrayList<Character> resetGuessedLetters(){
+			ArrayList<Character> charsUnguessed = new ArrayList <Character>();
+			for (int i = 0; i < 26; i++)
+			{
+				Character c = (char) ('A' + i);
+				charsUnguessed.add(c);
+			}
+			return charsUnguessed;	
+		}
+		
+		
+		public void updateCharsUnguessed(char c)
+		{
+			ArrayList<Character> result = new ArrayList <Character>();
+			
+			for(int i = 0; i < charsUnguessed.size(); i++)
+			{
+				if( Character.toUpperCase(c) != charsUnguessed.get(i))
+				{
+					result.add(charsUnguessed.get(i));
+				}
+				
+			}
+			
+			charsUnguessed = result;
+		}
+		
+		
+		//makes a string of the ArrayList of unguessed letters
+		public String convertChar()
+		{
+			String str = "";
+			for(int i = 0; i < charsUnguessed.size(); i++)
+			{
+				str += charsUnguessed.remove(i) + " ";
+			}
+			return str;
+		}	
+		
+		
+		
+		//returns a string of characters unguessed
+		public String getCharUnguessed()
+		{
+			String result = "";
+			for (char s : charsUnguessed)
+			{
+				result += s + "  ";
+			}
+			return result;
+		}
+		
+		//-----------------------------------------------------------------------------------------------------
+		
+		//creates an array of the hidden phrase so it can be revealed as guesses are made
+		public String convertArray()
+		{
+			String str = "";
+			for (int i = 0; i < revealedArray.length; i++)
+			{
+				str += revealedArray[i];
+			}
+			return str;
+		}
+		
+		//creates a string of convertArray with extra spaces for visual appeal
+		public String convertArraySpaces()
+		{
+			String str = "";
+			for (int i = 0; i < revealedArray.length; i++)
+			{
+				str += revealedArray[i] + " ";
+			}
+			return str;
+		}
+		
+		
+
+		//checks to see if the guess is a valid guess
+		public boolean checkString(String inString){
+			String str = inString.toUpperCase();
+			Character ch = str.charAt(0);
+			return charsUnguessed.contains(ch);
+		}
+		
+		
+		//other getters and setters
+		public ArrayList<Character> getCharsUnguessed(){
+			return charsUnguessed;
+		}
+		
+		public int getNumGuesses(){
+			return numGuesses;
+		}
+			
+		public String getPresentPhrase(){
+			return presentPhrase;
+		}
+		
+		public int getNumWrongGuesses(){
+			return numWrongGuesses;
+		}
+		
+		public int getMaxWrongGuesses(){
+			return maxWrongGuesses;
+		}
+}
+			
+	
+
